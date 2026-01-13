@@ -1,0 +1,2898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equilibra • Smart Expense Splitter</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        /* ===== CSS RESET & BASE ===== */
+        :root {
+            --transition-speed: 0.3s;
+            --border-radius-sm: 8px;
+            --border-radius-md: 12px;
+            --border-radius-lg: 16px;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.12);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.14);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* ===== THEME SYSTEM ===== */
+        .theme-classic {
+            --color-primary: #4285F4;
+            --color-primary-dark: #3367D6;
+            --color-secondary: #34A853;
+            --color-accent: #EA4335;
+            --color-warning: #FBBC05;
+            --color-surface: #FFFFFF;
+            --color-surface-alt: #F8F9FA;
+            --color-surface-elevated: #FFFFFF;
+            --color-text-primary: #202124;
+            --color-text-secondary: #5F6368;
+            --color-text-tertiary: #9AA0A6;
+            --color-border: #DADCE0;
+            --color-shadow: rgba(0,0,0,0.08);
+            --gradient-primary: linear-gradient(135deg, #4285F4, #34A853);
+            --gradient-accent: linear-gradient(135deg, #EA4335, #FBBC05);
+        }
+        
+        .theme-dark {
+            --color-primary: #8AB4F8;
+            --color-primary-dark: #669DF6;
+            --color-secondary: #81C995;
+            --color-accent: #F28B82;
+            --color-warning: #FDD663;
+            --color-surface: #202124;
+            --color-surface-alt: #292A2D;
+            --color-surface-elevated: #2D2E30;
+            --color-text-primary: #E8EAED;
+            --color-text-secondary: #BDC1C6;
+            --color-text-tertiary: #9AA0A6;
+            --color-border: #3C4043;
+            --color-shadow: rgba(0,0,0,0.3);
+            --gradient-primary: linear-gradient(135deg, #8AB4F8, #81C995);
+            --gradient-accent: linear-gradient(135deg, #F28B82, #FDD663);
+        }
+        
+        .theme-ocean {
+            --color-primary: #1E88E5;
+            --color-primary-dark: #1565C0;
+            --color-secondary: #00ACC1;
+            --color-accent: #FF6B6B;
+            --color-warning: #FFD166;
+            --color-surface: #F0F7FF;
+            --color-surface-alt: #E3F2FD;
+            --color-surface-elevated: #FFFFFF;
+            --color-text-primary: #0D3C61;
+            --color-text-secondary: #4A6572;
+            --color-text-tertiary: #78909C;
+            --color-border: #BBDEFB;
+            --color-shadow: rgba(30, 136, 229, 0.1);
+            --gradient-primary: linear-gradient(135deg, #1E88E5, #00ACC1);
+            --gradient-accent: linear-gradient(135deg, #FF6B6B, #FFD166);
+        }
+        
+        .theme-forest {
+            --color-primary: #2E7D32;
+            --color-primary-dark: #1B5E20;
+            --color-secondary: #66BB6A;
+            --color-accent: #FF8A65;
+            --color-warning: #FFCA28;
+            --color-surface: #F1F8E9;
+            --color-surface-alt: #E8F5E9;
+            --color-surface-elevated: #FFFFFF;
+            --color-text-primary: #1B5E20;
+            --color-text-secondary: #4A6572;
+            --color-text-tertiary: #78909C;
+            --color-border: #C8E6C9;
+            --color-shadow: rgba(46, 125, 50, 0.1);
+            --gradient-primary: linear-gradient(135deg, #2E7D32, #66BB6A);
+            --gradient-accent: linear-gradient(135deg, #FF8A65, #FFCA28);
+        }
+        
+        .theme-sunset {
+            --color-primary: #FF6B35;
+            --color-primary-dark: #E55A24;
+            --color-secondary: #FF9F1C;
+            --color-accent: #6A67CE;
+            --color-warning: #FFD93D;
+            --color-surface: #FFF9F0;
+            --color-surface-alt: #FFF3E0;
+            --color-surface-elevated: #FFFFFF;
+            --color-text-primary: #5A3E1B;
+            --color-text-secondary: #8D6E63;
+            --color-text-tertiary: #A1887F;
+            --color-border: #FFCCBC;
+            --color-shadow: rgba(255, 107, 53, 0.1);
+            --gradient-primary: linear-gradient(135deg, #FF6B35, #FF9F1C);
+            --gradient-accent: linear-gradient(135deg, #6A67CE, #FFD93D);
+        }
+        
+        .theme-twilight {
+            --color-primary: #6C63FF;
+            --color-primary-dark: #5A52D3;
+            --color-secondary: #36D1DC;
+            --color-accent: #FF6584;
+            --color-warning: #FFD166;
+            --color-surface: #0F0F23;
+            --color-surface-alt: #1A1A2E;
+            --color-surface-elevated: #2D2B55;
+            --color-text-primary: #E2E2FF;
+            --color-text-secondary: #A5A6C5;
+            --color-text-tertiary: #6D6D8A;
+            --color-border: #3A3A5D;
+            --color-shadow: rgba(108, 99, 255, 0.15);
+            --gradient-primary: linear-gradient(135deg, #6C63FF, #36D1DC);
+            --gradient-accent: linear-gradient(135deg, #FF6584, #FFD166);
+        }
+        
+        .theme-midnight {
+            --color-primary: #BB86FC;
+            --color-primary-dark: #9A67EA;
+            --color-secondary: #03DAC6;
+            --color-accent: #CF6679;
+            --color-warning: #FFB74D;
+            --color-surface: #121212;
+            --color-surface-alt: #1E1E1E;
+            --color-surface-elevated: #2C2C2C;
+            --color-text-primary: #FFFFFF;
+            --color-text-secondary: #B0B0B0;
+            --color-text-tertiary: #6D6D6D;
+            --color-border: #383838;
+            --color-shadow: rgba(0,0,0,0.4);
+            --gradient-primary: linear-gradient(135deg, #BB86FC, #03DAC6);
+            --gradient-accent: linear-gradient(135deg, #CF6679, #FFB74D);
+        }
+        
+        .theme-vintage {
+            --color-primary: #8B5A2B;
+            --color-primary-dark: #6B4423;
+            --color-secondary: #D4A76A;
+            --color-accent: #9B6B54;
+            --color-warning: #E6B87E;
+            --color-surface: #FAF3E8;
+            --color-surface-alt: #F5E9D5;
+            --color-surface-elevated: #FFFFFF;
+            --color-text-primary: #3E2723;
+            --color-text-secondary: #6D4C41;
+            --color-text-tertiary: #8D6E63;
+            --color-border: #D7CCC8;
+            --color-shadow: rgba(139, 90, 43, 0.1);
+            --gradient-primary: linear-gradient(135deg, #8B5A2B, #D4A76A);
+            --gradient-accent: linear-gradient(135deg, #9B6B54, #E6B87E);
+        }
+        
+        /* ===== LAYOUT & CONTAINERS ===== */
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: var(--color-surface);
+            color: var(--color-text-primary);
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+        }
+        
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 2rem;
+            background-color: var(--color-surface-elevated);
+            border-bottom: 1px solid var(--color-border);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: all var(--transition-speed);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.25rem;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .logo-text {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .main-content {
+            display: flex;
+            flex: 1;
+            padding: 1.5rem;
+            gap: 1.5rem;
+            max-width: 1600px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .left-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .right-panel {
+            width: 320px;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .footer {
+            padding: 1.5rem;
+            text-align: center;
+            background-color: var(--color-surface-alt);
+            border-top: 1px solid var(--color-border);
+            margin-top: 2rem;
+            font-size: 0.875rem;
+            color: var(--color-text-secondary);
+        }
+        
+        /* ===== CARD COMPONENTS ===== */
+        .card {
+            background-color: var(--color-surface-elevated);
+            border-radius: var(--border-radius-md);
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-speed);
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            box-shadow: var(--shadow-md);
+        }
+        
+        .card-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--color-surface-alt);
+        }
+        
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--color-text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .card-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--color-primary);
+            color: white;
+        }
+        
+        .card-content {
+            padding: 1.5rem;
+        }
+        
+        /* ===== FORM ELEMENTS ===== */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--color-text-secondary);
+            font-size: 0.875rem;
+        }
+        
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius-sm);
+            background-color: var(--color-surface);
+            color: var(--color-text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9375rem;
+            transition: all 0.2s;
+        }
+        
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.15);
+        }
+        
+        .input-with-icon {
+            position: relative;
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--color-text-tertiary);
+        }
+        
+        .input-with-icon input {
+            padding-left: 2.75rem;
+        }
+        
+        /* ===== BUTTONS ===== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius-sm);
+            font-weight: 500;
+            font-size: 0.9375rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--color-primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .btn-secondary {
+            background-color: var(--color-surface-alt);
+            color: var(--color-text-primary);
+            border: 1px solid var(--color-border);
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--color-border);
+        }
+        
+        .btn-accent {
+            background-color: var(--color-accent);
+            color: white;
+        }
+        
+        .btn-accent:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+        
+        .btn-icon {
+            padding: 0.5rem;
+            width: 40px;
+            height: 40px;
+        }
+        
+        .btn-full {
+            width: 100%;
+        }
+        
+        /* ===== BADGES & TAGS ===== */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .badge-primary {
+            background-color: rgba(66, 133, 244, 0.1);
+            color: var(--color-primary);
+        }
+        
+        .badge-success {
+            background-color: rgba(52, 168, 83, 0.1);
+            color: var(--color-secondary);
+        }
+        
+        .badge-warning {
+            background-color: rgba(251, 188, 5, 0.1);
+            color: var(--color-warning);
+        }
+        
+        /* ===== TABS ===== */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--color-border);
+            margin-bottom: 1.5rem;
+        }
+        
+        .tab {
+            padding: 0.75rem 1.5rem;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: var(--color-text-secondary);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        
+        .tab:hover {
+            color: var(--color-text-primary);
+        }
+        
+        .tab.active {
+            color: var(--color-primary);
+            border-bottom-color: var(--color-primary);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* ===== PEOPLE MANAGER ===== */
+        .people-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .person-card {
+            padding: 1rem;
+            border-radius: var(--border-radius-md);
+            background-color: var(--color-surface-alt);
+            border: 1px solid var(--color-border);
+            transition: all 0.2s;
+            position: relative;
+        }
+        
+        .person-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .person-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1.25rem;
+            color: white;
+            margin-bottom: 0.75rem;
+        }
+        
+        .person-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .person-balance {
+            font-size: 0.875rem;
+            color: var(--color-text-secondary);
+        }
+        
+        .person-actions {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            display: flex;
+            gap: 0.25rem;
+        }
+        
+        /* ===== EXPENSE LOG ===== */
+        .expense-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .expense-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--color-border);
+            transition: background-color 0.2s;
+        }
+        
+        .expense-item:hover {
+            background-color: var(--color-surface-alt);
+        }
+        
+        .expense-details {
+            flex: 1;
+        }
+        
+        .expense-title {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+        
+        .expense-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.875rem;
+            color: var(--color-text-secondary);
+        }
+        
+        .expense-amount {
+            font-weight: 600;
+            font-size: 1.125rem;
+        }
+        
+        .expense-paid {
+            color: var(--color-secondary);
+        }
+        
+        .expense-owed {
+            color: var(--color-accent);
+        }
+        
+        /* ===== BALANCE TABLE ===== */
+        .balance-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .balance-table th {
+            text-align: left;
+            padding: 1rem;
+            border-bottom: 2px solid var(--color-border);
+            font-weight: 600;
+            color: var(--color-text-secondary);
+            background-color: var(--color-surface-alt);
+        }
+        
+        .balance-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--color-border);
+        }
+        
+        .balance-positive {
+            color: var(--color-secondary);
+            font-weight: 600;
+        }
+        
+        .balance-negative {
+            color: var(--color-accent);
+            font-weight: 600;
+        }
+        
+        .balance-zero {
+            color: var(--color-text-tertiary);
+        }
+        
+        /* ===== SETTLEMENT PLAN ===== */
+        .settlement-plan {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .settlement-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background-color: var(--color-surface-alt);
+            border-radius: var(--border-radius-sm);
+            border-left: 4px solid var(--color-primary);
+        }
+        
+        .settlement-details {
+            flex: 1;
+        }
+        
+        .settlement-arrow {
+            margin: 0 1rem;
+            color: var(--color-text-tertiary);
+        }
+        
+        /* ===== SHAREABLE SUMMARY ===== */
+        .summary-container {
+            padding: 1.5rem;
+            background-color: var(--color-surface-alt);
+            border-radius: var(--border-radius-md);
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.875rem;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        /* ===== THEME SELECTOR ===== */
+        .theme-selector {
+            position: relative;
+        }
+        
+        .theme-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+        }
+        
+        .theme-option {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: var(--border-radius-sm);
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .theme-option:hover {
+            transform: scale(1.05);
+        }
+        
+        .theme-option.active {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.2);
+        }
+        
+        .theme-preview {
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+        }
+        
+        .theme-primary {
+            background-color: var(--color-primary);
+        }
+        
+        .theme-secondary {
+            background-color: var(--color-secondary);
+        }
+        
+        .theme-accent {
+            background-color: var(--color-accent);
+        }
+        
+        .theme-surface {
+            background-color: var(--color-surface);
+        }
+        
+        .theme-name {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(0,0,0,0.7);
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.25rem;
+            text-align: center;
+        }
+        
+        /* ===== CUSTOMIZATION PANEL ===== */
+        .customization-options {
+            display: grid;
+            gap: 1.5rem;
+        }
+        
+        .option-group {
+            background-color: var(--color-surface-alt);
+            padding: 1.25rem;
+            border-radius: var(--border-radius-md);
+        }
+        
+        .option-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--color-border);
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .toggle-slider {
+            background-color: var(--color-primary);
+        }
+        
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+        
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .slider-label {
+            min-width: 120px;
+        }
+        
+        .slider-value {
+            min-width: 40px;
+            text-align: right;
+            font-weight: 500;
+        }
+        
+        /* ===== MODALS & OVERLAYS ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 1rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            background-color: var(--color-surface-elevated);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: translateY(20px);
+            transition: transform 0.3s;
+        }
+        
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+        
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--color-text-tertiary);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-close:hover {
+            background-color: var(--color-surface-alt);
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .modal-footer {
+            padding: 1.5rem;
+            border-top: 1px solid var(--color-border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+        
+        /* ===== USER GUIDE ===== */
+        .guide-section {
+            margin-bottom: 2rem;
+        }
+        
+        .guide-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--color-primary);
+        }
+        
+        .guide-step {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background-color: var(--color-surface-alt);
+            border-radius: var(--border-radius-md);
+        }
+        
+        .step-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--color-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* ===== UTILITY CLASSES ===== */
+        .hidden {
+            display: none !important;
+        }
+        
+        .flex {
+            display: flex;
+        }
+        
+        .flex-col {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .items-center {
+            align-items: center;
+        }
+        
+        .justify-between {
+            justify-content: space-between;
+        }
+        
+        .gap-1 {
+            gap: 0.5rem;
+        }
+        
+        .gap-2 {
+            gap: 1rem;
+        }
+        
+        .gap-3 {
+            gap: 1.5rem;
+        }
+        
+        .mt-1 {
+            margin-top: 0.5rem;
+        }
+        
+        .mt-2 {
+            margin-top: 1rem;
+        }
+        
+        .mt-3 {
+            margin-top: 1.5rem;
+        }
+        
+        .mb-1 {
+            margin-bottom: 0.5rem;
+        }
+        
+        .mb-2 {
+            margin-bottom: 1rem;
+        }
+        
+        .mb-3 {
+            margin-bottom: 1.5rem;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .text-sm {
+            font-size: 0.875rem;
+        }
+        
+        .text-xs {
+            font-size: 0.75rem;
+        }
+        
+        .font-mono {
+            font-family: 'Roboto Mono', monospace;
+        }
+        
+        .text-success {
+            color: var(--color-secondary);
+        }
+        
+        .text-error {
+            color: var(--color-accent);
+        }
+        
+        .text-muted {
+            color: var(--color-text-tertiary);
+        }
+        
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 1200px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .right-panel {
+                width: 100%;
+            }
+            
+            .people-grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-header {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .header-controls {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .main-content {
+                padding: 1rem;
+            }
+            
+            .people-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .expense-meta {
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+            
+            .theme-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .modal {
+                max-height: 80vh;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .logo-text {
+                font-size: 1.5rem;
+            }
+            
+            .card-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+            
+            .people-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs {
+                flex-wrap: wrap;
+            }
+            
+            .tab {
+                flex: 1;
+                min-width: 120px;
+                text-align: center;
+            }
+        }
+        
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .animate-fadeIn {
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        .animate-slideIn {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        .animate-pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        /* ===== SCROLLBAR STYLING ===== */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--color-surface-alt);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--color-border);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--color-text-tertiary);
+        }
+    </style>
+</head>
+<body class="theme-classic">
+    <div class="app-container">
+        <!-- Header -->
+        <header class="main-header">
+            <div class="logo-container">
+                <div class="logo-icon">E</div>
+                <div class="logo-text">Equilibra</div>
+            </div>
+            <div class="header-controls">
+                <button class="btn btn-secondary" id="customizeBtn">
+                    <i class="fas fa-sliders-h"></i> Customize
+                </button>
+                <button class="btn btn-secondary" id="themeBtn">
+                    <i class="fas fa-palette"></i> Themes
+                </button>
+                <button class="btn btn-secondary" id="guideBtn">
+                    <i class="fas fa-question-circle"></i> Guide
+                </button>
+                <div class="input-with-icon">
+                    <i class="fas fa-search input-icon"></i>
+                    <input type="text" class="form-input" placeholder="Search..." id="searchInput">
+                </div>
+            </div>
+        </header>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Left Panel -->
+            <div class="left-panel">
+                <!-- People Manager -->
+                <div class="card" id="peopleSection">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <div class="card-icon"><i class="fas fa-users"></i></div>
+                            People Manager
+                        </div>
+                        <button class="btn btn-primary" id="addPersonBtn">
+                            <i class="fas fa-plus"></i> Add Person
+                        </button>
+                    </div>
+                    <div class="card-content">
+                        <div class="people-grid" id="peopleGrid">
+                            <!-- People will be dynamically added here -->
+                        </div>
+                        <div class="mt-3 text-center text-muted" id="noPeopleMessage">
+                            No people added yet. Click "Add Person" to get started.
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Expense Log -->
+                <div class="card" id="expenseSection">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <div class="card-icon"><i class="fas fa-receipt"></i></div>
+                            Expense Log
+                        </div>
+                        <button class="btn btn-primary" id="addExpenseBtn">
+                            <i class="fas fa-plus"></i> Add Expense
+                        </button>
+                    </div>
+                    <div class="card-content">
+                        <div class="tabs">
+                            <button class="tab active" data-tab="all">All Expenses</button>
+                            <button class="tab" data-tab="unsettled">Unsettled</button>
+                            <button class="tab" data-tab="byPerson">By Person</button>
+                        </div>
+                        <div class="expense-list" id="expenseList">
+                            <!-- Expenses will be dynamically added here -->
+                        </div>
+                        <div class="mt-3 text-center text-muted" id="noExpensesMessage">
+                            No expenses added yet. Click "Add Expense" to log your first expense.
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Balance Table -->
+                <div class="card" id="balanceSection">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <div class="card-icon"><i class="fas fa-balance-scale"></i></div>
+                            Balance Table
+                        </div>
+                        <button class="btn btn-secondary" id="recalculateBtn">
+                            <i class="fas fa-sync-alt"></i> Recalculate
+                        </button>
+                    </div>
+                    <div class="card-content">
+                        <table class="balance-table" id="balanceTable">
+                            <thead>
+                                <tr>
+                                    <th>Person</th>
+                                    <th>Paid</th>
+                                    <th>Owed</th>
+                                    <th>Net Balance</th>
+                                </tr>
+                            </thead>
+                            <tbody id="balanceTableBody">
+                                <!-- Balance rows will be dynamically added here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Panel -->
+            <div class="right-panel">
+                <!-- Settlement Plan -->
+                <div class="card" id="settlementSection">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <div class="card-icon"><i class="fas fa-handshake"></i></div>
+                            Settlement Plan
+                        </div>
+                        <button class="btn btn-accent" id="generatePlanBtn">
+                            <i class="fas fa-calculator"></i> Generate
+                        </button>
+                    </div>
+                    <div class="card-content">
+                        <div class="settlement-plan" id="settlementPlan">
+                            <!-- Settlement items will be dynamically added here -->
+                        </div>
+                        <div class="mt-3 text-center text-muted" id="noSettlementMessage">
+                            No settlement plan generated. Click "Generate" to create a settlement plan.
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Shareable Summary -->
+                <div class="card" id="summarySection">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <div class="card-icon"><i class="fas fa-share-alt"></i></div>
+                            Shareable Summary
+                        </div>
+                        <div>
+                            <button class="btn btn-secondary btn-sm" id="copySummaryBtn">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                            <button class="btn btn-primary btn-sm" id="exportSummaryBtn">
+                                <i class="fas fa-download"></i> Export
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="summary-container" id="summaryContainer">
+                            <!-- Summary will be dynamically added here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Stats -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <div class="card-icon"><i class="fas fa-chart-bar"></i></div>
+                            Quick Stats
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="flex flex-col gap-2">
+                            <div class="flex justify-between">
+                                <span class="text-muted">Total Expenses:</span>
+                                <span class="font-mono" id="totalExpenses">$0.00</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-muted">People Involved:</span>
+                                <span class="font-mono" id="totalPeople">0</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-muted">Settlements Needed:</span>
+                                <span class="font-mono" id="totalSettlements">0</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-muted">Session Created:</span>
+                                <span class="font-mono" id="sessionDate">Just now</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="mb-1">
+                <button class="btn btn-secondary btn-sm" id="importBtn">
+                    <i class="fas fa-file-import"></i> Import
+                </button>
+                <button class="btn btn-secondary btn-sm" id="exportBtn">
+                    <i class="fas fa-file-export"></i> Export
+                </button>
+                <button class="btn btn-secondary btn-sm" id="resetBtn">
+                    <i class="fas fa-redo"></i> Reset
+                </button>
+            </div>
+            <div class="text-muted text-sm">
+                Made with ❤️ by <a href="https://github.com/Aliriyaj007" target="_blank" style="color: var(--color-primary); text-decoration: none;">Aliriyaj007</a>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- Modals -->
+    
+    <!-- Add Person Modal -->
+    <div class="modal-overlay" id="addPersonModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Add New Person</div>
+                <button class="modal-close" id="closePersonModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-input" id="personNameInput" placeholder="Enter full name">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Initial Balance (Optional)</label>
+                    <input type="number" class="form-input" id="personBalanceInput" placeholder="0.00" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Color Theme</label>
+                    <div class="flex gap-2 mt-1" id="colorSelector">
+                        <!-- Colors will be dynamically added -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelPersonBtn">Cancel</button>
+                <button class="btn btn-primary" id="savePersonBtn">Add Person</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Expense Modal -->
+    <div class="modal-overlay" id="addExpenseModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Add New Expense</div>
+                <button class="modal-close" id="closeExpenseModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <input type="text" class="form-input" id="expenseDescInput" placeholder="What was this expense for?">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Amount ($)</label>
+                    <input type="number" class="form-input" id="expenseAmountInput" placeholder="0.00" step="0.01" min="0.01">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Paid By</label>
+                    <select class="form-select" id="expensePayerSelect">
+                        <!-- Options will be dynamically added -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Split Between</label>
+                    <div id="splitParticipants">
+                        <!-- Participants will be dynamically added -->
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Split Type</label>
+                    <div class="tabs">
+                        <button class="tab active" data-split="equal">Equal</button>
+                        <button class="tab" data-split="percentage">Percentage</button>
+                        <button class="tab" data-split="custom">Custom</button>
+                    </div>
+                    <div class="mt-2" id="splitControls">
+                        <!-- Split controls will be dynamically added -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelExpenseBtn">Cancel</button>
+                <button class="btn btn-primary" id="saveExpenseBtn">Add Expense</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Theme Selector Modal -->
+    <div class="modal-overlay" id="themeModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Select Theme</div>
+                <button class="modal-close" id="closeThemeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="theme-grid" id="themeGrid">
+                    <!-- Themes will be dynamically added -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Customization Modal -->
+    <div class="modal-overlay" id="customizeModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Customize App</div>
+                <button class="modal-close" id="closeCustomizeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="customization-options">
+                    <div class="option-group">
+                        <div class="option-title">
+                            <i class="fas fa-eye"></i> UI Preferences
+                        </div>
+                        <div class="form-group">
+                            <div class="flex justify-between items-center">
+                                <span>Compact Mode</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="compactModeToggle">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="flex justify-between items-center">
+                                <span>Reduced Animations</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="reduceAnimationsToggle">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="slider-container">
+                                <span class="slider-label">UI Density</span>
+                                <input type="range" min="1" max="3" value="2" class="form-input" id="uiDensitySlider">
+                                <span class="slider-value" id="uiDensityValue">Medium</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="option-group">
+                        <div class="option-title">
+                            <i class="fas fa-calculator"></i> Calculation Settings
+                        </div>
+                        <div class="form-group">
+                            <div class="flex justify-between items-center">
+                                <span>Auto-recalculate</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="autoRecalcToggle" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="flex justify-between items-center">
+                                <span>Round to nearest dollar</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="roundDollarsToggle">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="flex justify-between items-center">
+                                <span>Include settled expenses</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="includeSettledToggle">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="option-group">
+                        <div class="option-title">
+                            <i class="fas fa-bell"></i> Notifications
+                        </div>
+                        <div class="form-group">
+                            <div class="flex justify-between items-center">
+                                <span>Desktop notifications</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="desktopNotificationsToggle">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="slider-container">
+                                <span class="slider-label">Notification Duration</span>
+                                <input type="range" min="1" max="10" value="3" class="form-input" id="notificationDurationSlider">
+                                <span class="slider-value" id="notificationDurationValue">3s</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="resetDefaultsBtn">Reset Defaults</button>
+                <button class="btn btn-primary" id="saveSettingsBtn">Save Settings</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- User Guide Modal -->
+    <div class="modal-overlay" id="guideModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">User Guide</div>
+                <button class="modal-close" id="closeGuideModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="guide-section">
+                    <div class="guide-title">Getting Started</div>
+                    <div class="guide-step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <div class="step-title">Add People</div>
+                            <div class="text-muted">Start by adding all participants using the "Add Person" button in the People Manager section. Each person gets a unique color for easy identification.</div>
+                        </div>
+                    </div>
+                    <div class="guide-step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <div class="step-title">Log Expenses</div>
+                            <div class="text-muted">Use the "Add Expense" button to record shared expenses. Specify who paid, the amount, and how it should be split among participants.</div>
+                        </div>
+                    </div>
+                    <div class="guide-step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <div class="step-title">View Balances</div>
+                            <div class="text-muted">Check the Balance Table to see who owes whom. Green indicates money owed to the person, red indicates they owe money.</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="guide-section">
+                    <div class="guide-title">Advanced Features</div>
+                    <div class="guide-step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <div class="step-title">Split Options</div>
+                            <div class="text-muted">Choose from three split methods: Equal (default), Percentage, or Custom amounts for each participant.</div>
+                        </div>
+                    </div>
+                    <div class="guide-step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <div class="step-title">Settlement Plan</div>
+                            <div class="text-muted">Generate an optimal settlement plan that minimizes the number of transactions needed to settle all debts.</div>
+                        </div>
+                    </div>
+                    <div class="guide-step">
+                        <div class="step-number">6</div>
+                        <div class="step-content">
+                            <div class="step-title">Export & Share</div>
+                            <div class="text-muted">Export your settlement plan as text or JSON. Copy to clipboard or download as a file to share with others.</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="guide-section">
+                    <div class="guide-title">Customization</div>
+                    <div class="guide-step">
+                        <div class="step-number">7</div>
+                        <div class="step-content">
+                            <div class="step-title">Themes</div>
+                            <div class="text-muted">Choose from 8 premium themes using the palette button in the header. Themes change the entire color scheme instantly.</div>
+                        </div>
+                    </div>
+                    <div class="guide-step">
+                        <div class="step-number">8</div>
+                        <div class="step-content">
+                            <div class="step-title">Settings</div>
+                            <div class="text-muted">Customize app behavior, UI density, notifications, and calculation preferences in the Customization panel.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Import/Export Modal -->
+    <div class="modal-overlay" id="importExportModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title" id="importExportTitle">Import/Export Data</div>
+                <button class="modal-close" id="closeImportExportModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="tabs">
+                    <button class="tab active" data-io="export">Export</button>
+                    <button class="tab" data-io="import">Import</button>
+                </div>
+                <div class="tab-content active" id="exportTab">
+                    <div class="form-group">
+                        <label class="form-label">Export Data (JSON)</label>
+                        <textarea class="form-textarea" rows="10" id="exportData" readonly></textarea>
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="btn btn-primary" id="copyJsonBtn">
+                            <i class="fas fa-copy"></i> Copy JSON
+                        </button>
+                        <button class="btn btn-primary" id="downloadJsonBtn">
+                            <i class="fas fa-download"></i> Download File
+                        </button>
+                    </div>
+                </div>
+                <div class="tab-content" id="importTab">
+                    <div class="form-group">
+                        <label class="form-label">Paste JSON Data</label>
+                        <textarea class="form-textarea" rows="10" id="importData" placeholder="Paste exported JSON data here"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Or Upload File</label>
+                        <input type="file" class="form-input" id="importFile" accept=".json">
+                    </div>
+                    <div class="mt-2 text-muted text-sm">
+                        <i class="fas fa-info-circle"></i> Importing will replace your current data. Make sure to export first if needed.
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelImportExportBtn">Cancel</button>
+                <button class="btn btn-primary" id="processImportBtn" style="display: none;">Import Data</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Notification Toast -->
+    <div class="notification-toast" id="notificationToast" style="position: fixed; bottom: 20px; right: 20px; background-color: var(--color-surface-elevated); border-radius: var(--border-radius-md); padding: 1rem; box-shadow: var(--shadow-lg); border-left: 4px solid var(--color-primary); max-width: 350px; z-index: 1000; display: none;">
+        <div class="flex justify-between items-start">
+            <div>
+                <div style="font-weight: 600;" id="toastTitle">Notification</div>
+                <div class="text-muted text-sm" id="toastMessage">This is a notification message</div>
+            </div>
+            <button class="modal-close" id="closeToast">&times;</button>
+        </div>
+    </div>
+
+    <script>
+        // ===== EQUILIBRA APPLICATION - SIMPLIFIED VERSION =====
+        // Fixed all button functionality with proper event handling
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Equilibra app loaded successfully!');
+            
+            // Initialize app state
+            const appState = {
+                people: [],
+                expenses: [],
+                settlements: [],
+                settings: {
+                    theme: 'theme-classic',
+                    compactMode: false,
+                    reduceAnimations: false,
+                    uiDensity: 2,
+                    autoRecalc: true,
+                    roundDollars: false,
+                    includeSettled: false,
+                    desktopNotifications: false,
+                    notificationDuration: 3
+                },
+                sessionDate: new Date().toISOString()
+            };
+            
+            // Color palette for person avatars
+            const colorPalette = [
+                '#4285F4', '#EA4335', '#34A853', '#FBBC05', '#8B5A2B',
+                '#6C63FF', '#FF6B35', '#2E7D32', '#00ACC1', '#9B6B54'
+            ];
+            
+            // Theme definitions
+            const themes = [
+                { id: 'theme-classic', name: 'Classic', colors: ['#4285F4', '#34A853', '#EA4335', '#FFFFFF'] },
+                { id: 'theme-dark', name: 'Dark', colors: ['#8AB4F8', '#81C995', '#F28B82', '#202124'] },
+                { id: 'theme-ocean', name: 'Ocean', colors: ['#1E88E5', '#00ACC1', '#FF6B6B', '#F0F7FF'] },
+                { id: 'theme-forest', name: 'Forest', colors: ['#2E7D32', '#66BB6A', '#FF8A65', '#F1F8E9'] },
+                { id: 'theme-sunset', name: 'Sunset', colors: ['#FF6B35', '#FF9F1C', '#6A67CE', '#FFF9F0'] },
+                { id: 'theme-twilight', name: 'Twilight', colors: ['#6C63FF', '#36D1DC', '#FF6584', '#0F0F23'] },
+                { id: 'theme-midnight', name: 'Midnight', colors: ['#BB86FC', '#03DAC6', '#CF6679', '#121212'] },
+                { id: 'theme-vintage', name: 'Vintage', colors: ['#8B5A2B', '#D4A76A', '#9B6B54', '#FAF3E8'] }
+            ];
+            
+            // Load from localStorage
+            function loadState() {
+                try {
+                    const saved = localStorage.getItem('equilibraState');
+                    const savedSettings = localStorage.getItem('equilibraSettings');
+                    
+                    if (saved) {
+                        const parsed = JSON.parse(saved);
+                        appState.people = parsed.people || [];
+                        appState.expenses = parsed.expenses || [];
+                        appState.settlements = parsed.settlements || [];
+                        appState.sessionDate = parsed.sessionDate || new Date().toISOString();
+                    }
+                    
+                    if (savedSettings) {
+                        appState.settings = { ...appState.settings, ...JSON.parse(savedSettings) };
+                        document.body.className = appState.settings.theme;
+                    }
+                } catch (e) {
+                    console.warn('Error loading saved state:', e);
+                }
+            }
+            
+            // Save to localStorage
+            function saveState() {
+                try {
+                    const stateToSave = {
+                        people: appState.people,
+                        expenses: appState.expenses,
+                        settlements: appState.settlements,
+                        sessionDate: appState.sessionDate
+                    };
+                    
+                    localStorage.setItem('equilibraState', JSON.stringify(stateToSave));
+                    localStorage.setItem('equilibraSettings', JSON.stringify(appState.settings));
+                } catch (e) {
+                    console.error('Error saving state:', e);
+                }
+            }
+            
+            // Generate unique ID
+            function generateId() {
+                return Date.now().toString(36) + Math.random().toString(36).substr(2);
+            }
+            
+            // Calculate balances
+            function calculateBalances() {
+                const balances = {};
+                
+                // Initialize with people's initial balances
+                appState.people.forEach(person => {
+                    balances[person.id] = person.initialBalance || 0;
+                });
+                
+                // Process expenses
+                appState.expenses.forEach(expense => {
+                    if (expense.settled && !appState.settings.includeSettled) {
+                        return;
+                    }
+                    
+                    const total = expense.amount;
+                    const participants = expense.participants || [];
+                    
+                    if (participants.length === 0) return;
+                    
+                    // Calculate share per person
+                    let share = 0;
+                    if (expense.splitType === 'equal') {
+                        share = total / participants.length;
+                    }
+                    
+                    // Update balances
+                    participants.forEach(pid => {
+                        if (pid !== expense.payerId) {
+                            const payerBalance = balances[expense.payerId] || 0;
+                            const receiverBalance = balances[pid] || 0;
+                            balances[expense.payerId] = payerBalance + share;
+                            balances[pid] = receiverBalance - share;
+                        }
+                    });
+                });
+                
+                // Apply rounding if enabled
+                if (appState.settings.roundDollars) {
+                    Object.keys(balances).forEach(id => {
+                        balances[id] = Math.round(balances[id]);
+                    });
+                }
+                
+                return balances;
+            }
+            
+            // Generate settlement plan
+            function generateSettlementPlan() {
+                const balances = calculateBalances();
+                const creditors = [];
+                const debtors = [];
+                
+                // Separate creditors and debtors
+                Object.keys(balances).forEach(personId => {
+                    const balance = balances[personId];
+                    if (balance > 0.01) {
+                        creditors.push({ id: personId, amount: balance });
+                    } else if (balance < -0.01) {
+                        debtors.push({ id: personId, amount: -balance });
+                    }
+                });
+                
+                // Sort by amount (largest first)
+                creditors.sort((a, b) => b.amount - a.amount);
+                debtors.sort((a, b) => b.amount - a.amount);
+                
+                // Generate settlements
+                const settlements = [];
+                let i = 0, j = 0;
+                
+                while (i < creditors.length && j < debtors.length) {
+                    const creditor = creditors[i];
+                    const debtor = debtors[j];
+                    const amount = Math.min(creditor.amount, debtor.amount);
+                    
+                    if (amount > 0.01) {
+                        settlements.push({
+                            from: debtor.id,
+                            to: creditor.id,
+                            amount: parseFloat(amount.toFixed(2))
+                        });
+                        
+                        creditor.amount -= amount;
+                        debtor.amount -= amount;
+                    }
+                    
+                    if (creditor.amount < 0.01) i++;
+                    if (debtor.amount < 0.01) j++;
+                }
+                
+                appState.settlements = settlements;
+                saveState();
+                return settlements;
+            }
+            
+            // Update all views
+            function updateAllViews() {
+                renderPeople();
+                renderExpenses();
+                renderBalanceTable();
+                renderSettlementPlan();
+                renderSummary();
+                updateStats();
+            }
+            
+            // Render people
+            function renderPeople() {
+                const container = document.getElementById('peopleGrid');
+                const noPeopleMsg = document.getElementById('noPeopleMessage');
+                
+                if (!container) return;
+                
+                if (appState.people.length === 0) {
+                    container.innerHTML = '';
+                    if (noPeopleMsg) noPeopleMsg.style.display = 'block';
+                    return;
+                }
+                
+                if (noPeopleMsg) noPeopleMsg.style.display = 'none';
+                
+                const balances = calculateBalances();
+                container.innerHTML = appState.people.map(person => {
+                    const balance = balances[person.id] || 0;
+                    const balanceClass = balance > 0 ? 'balance-positive' : 
+                                       balance < 0 ? 'balance-negative' : 'balance-zero';
+                    
+                    return `
+                        <div class="person-card animate-fadeIn" data-id="${person.id}">
+                            <div class="person-avatar" style="background-color: ${person.color}">
+                                ${person.avatarInitial}
+                            </div>
+                            <div class="person-name">${escapeHtml(person.name)}</div>
+                            <div class="person-balance">
+                                Balance: <span class="${balanceClass}">$${balance.toFixed(2)}</span>
+                            </div>
+                            <div class="person-actions">
+                                <button class="btn btn-icon btn-secondary delete-person" title="Delete" data-id="${person.id}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+                // Add event listeners to delete buttons
+                container.querySelectorAll('.delete-person').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const personId = this.getAttribute('data-id');
+                        deletePerson(personId);
+                    });
+                });
+            }
+            
+            // Render expenses
+            function renderExpenses() {
+                const container = document.getElementById('expenseList');
+                const noExpensesMsg = document.getElementById('noExpensesMessage');
+                
+                if (!container) return;
+                
+                if (appState.expenses.length === 0) {
+                    container.innerHTML = '';
+                    if (noExpensesMsg) noExpensesMsg.style.display = 'block';
+                    return;
+                }
+                
+                if (noExpensesMsg) noExpensesMsg.style.display = 'none';
+                
+                container.innerHTML = appState.expenses.map(expense => {
+                    const payer = appState.people.find(p => p.id === expense.payerId);
+                    const date = new Date(expense.date).toLocaleDateString();
+                    
+                    return `
+                        <div class="expense-item animate-fadeIn" data-id="${expense.id}">
+                            <div class="expense-details">
+                                <div class="expense-title">${escapeHtml(expense.description)}</div>
+                                <div class="expense-meta">
+                                    <span>Paid by: <strong>${payer ? escapeHtml(payer.name) : 'Unknown'}</strong></span>
+                                    <span>Date: ${date}</span>
+                                    <span>Participants: ${expense.participants ? expense.participants.length : 0}</span>
+                                    ${expense.settled ? '<span class="badge badge-success">Settled</span>' : ''}
+                                </div>
+                            </div>
+                            <div class="expense-amount">
+                                $${expense.amount.toFixed(2)}
+                                <div class="${expense.settled ? 'expense-paid text-success' : 'expense-owed text-error'}">
+                                    <i class="fas fa-${expense.settled ? 'check' : 'clock'}"></i>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+            
+            // Render balance table
+            function renderBalanceTable() {
+                const container = document.getElementById('balanceTableBody');
+                if (!container) return;
+                
+                if (appState.people.length === 0) {
+                    container.innerHTML = `
+                        <tr>
+                            <td colspan="4" class="text-center text-muted">
+                                Add people and expenses to see balances
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                const balances = calculateBalances();
+                let totalPaid = 0;
+                
+                container.innerHTML = appState.people.map(person => {
+                    const balance = balances[person.id] || 0;
+                    const personExpenses = appState.expenses.filter(e => e.payerId === person.id);
+                    const paid = personExpenses.reduce((sum, exp) => sum + exp.amount, 0);
+                    const owed = Math.max(0, -balance);
+                    
+                    totalPaid += paid;
+                    
+                    const balanceClass = balance > 0.01 ? 'balance-positive' : 
+                                       balance < -0.01 ? 'balance-negative' : 'balance-zero';
+                    
+                    return `
+                        <tr class="animate-fadeIn">
+                            <td>
+                                <div class="flex items-center gap-2">
+                                    <div class="person-avatar" style="width: 32px; height: 32px; background-color: ${person.color}; font-size: 0.875rem">
+                                        ${person.avatarInitial}
+                                    </div>
+                                    ${escapeHtml(person.name)}
+                                </div>
+                            </td>
+                            <td>$${paid.toFixed(2)}</td>
+                            <td>$${owed.toFixed(2)}</td>
+                            <td class="${balanceClass}">
+                                ${balance > 0.01 ? '+' : ''}$${balance.toFixed(2)}
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+                
+                // Update stats
+                document.getElementById('totalExpenses').textContent = `$${totalPaid.toFixed(2)}`;
+                document.getElementById('totalPeople').textContent = appState.people.length.toString();
+            }
+            
+            // Render settlement plan
+            function renderSettlementPlan() {
+                const container = document.getElementById('settlementPlan');
+                const noSettlementMsg = document.getElementById('noSettlementMessage');
+                
+                if (!container) return;
+                
+                if (appState.settlements.length === 0) {
+                    container.innerHTML = '';
+                    if (noSettlementMsg) noSettlementMsg.style.display = 'block';
+                    document.getElementById('totalSettlements').textContent = '0';
+                    return;
+                }
+                
+                if (noSettlementMsg) noSettlementMsg.style.display = 'none';
+                document.getElementById('totalSettlements').textContent = appState.settlements.length.toString();
+                
+                container.innerHTML = appState.settlements.map(settlement => {
+                    const fromPerson = appState.people.find(p => p.id === settlement.from);
+                    const toPerson = appState.people.find(p => p.id === settlement.to);
+                    
+                    if (!fromPerson || !toPerson) return '';
+                    
+                    return `
+                        <div class="settlement-item animate-slideIn">
+                            <div class="settlement-details">
+                                <div class="flex items-center">
+                                    <div class="person-avatar" style="width: 32px; height: 32px; background-color: ${fromPerson.color}">
+                                        ${fromPerson.avatarInitial}
+                                    </div>
+                                    <div class="ml-2">
+                                        <strong>${escapeHtml(fromPerson.name)}</strong>
+                                        <div class="text-xs text-muted">pays</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="settlement-arrow">
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                            <div class="settlement-details">
+                                <div class="flex items-center">
+                                    <div class="person-avatar" style="width: 32px; height: 32px; background-color: ${toPerson.color}">
+                                        ${toPerson.avatarInitial}
+                                    </div>
+                                    <div class="ml-2">
+                                        <strong>${escapeHtml(toPerson.name)}</strong>
+                                        <div class="text-xs text-muted">receives</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="font-family: 'Roboto Mono', monospace; font-weight: 600; color: var(--color-primary);">
+                                $${settlement.amount.toFixed(2)}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+            
+            // Render summary
+            function renderSummary() {
+                const container = document.getElementById('summaryContainer');
+                if (!container) return;
+                
+                const balances = calculateBalances();
+                let summary = '=== EQUILIBRA EXPENSE SUMMARY ===\n\n';
+                summary += `Generated: ${new Date().toLocaleString()}\n`;
+                summary += `Total People: ${appState.people.length}\n`;
+                summary += `Total Expenses: ${appState.expenses.length}\n\n`;
+                
+                // People section
+                summary += '--- PEOPLE ---\n';
+                appState.people.forEach(person => {
+                    const balance = balances[person.id] || 0;
+                    summary += `${person.name}: $${balance.toFixed(2)} ${balance >= 0 ? '(owed to)' : '(owes)'}\n`;
+                });
+                
+                // Expenses section
+                if (appState.expenses.length > 0) {
+                    summary += '\n--- EXPENSES ---\n';
+                    appState.expenses.forEach(expense => {
+                        const payer = appState.people.find(p => p.id === expense.payerId);
+                        const date = new Date(expense.date).toLocaleDateString();
+                        summary += `${date}: ${expense.description} - $${expense.amount.toFixed(2)} (Paid by: ${payer ? payer.name : 'Unknown'})\n`;
+                    });
+                }
+                
+                // Settlements section
+                if (appState.settlements.length > 0) {
+                    summary += '\n--- SETTLEMENT PLAN ---\n';
+                    appState.settlements.forEach(settlement => {
+                        const fromPerson = appState.people.find(p => p.id === settlement.from);
+                        const toPerson = appState.people.find(p => p.id === settlement.to);
+                        summary += `${fromPerson ? fromPerson.name : 'Unknown'} → ${toPerson ? toPerson.name : 'Unknown'}: $${settlement.amount.toFixed(2)}\n`;
+                    });
+                }
+                
+                summary += '\n=== END SUMMARY ===';
+                container.textContent = summary;
+            }
+            
+            // Update stats
+            function updateStats() {
+                const totalExpenses = appState.expenses.reduce((sum, exp) => sum + exp.amount, 0);
+                document.getElementById('totalExpenses').textContent = `$${totalExpenses.toFixed(2)}`;
+                document.getElementById('totalPeople').textContent = appState.people.length.toString();
+                document.getElementById('totalSettlements').textContent = appState.settlements.length.toString();
+                
+                const date = new Date(appState.sessionDate);
+                document.getElementById('sessionDate').textContent = 
+                    date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            }
+            
+            // Add person
+            function addPerson(name, initialBalance = 0, color = null) {
+                const person = {
+                    id: generateId(),
+                    name: name.trim(),
+                    initialBalance: parseFloat(initialBalance) || 0,
+                    color: color || colorPalette[appState.people.length % colorPalette.length],
+                    avatarInitial: name.trim().charAt(0).toUpperCase(),
+                    createdAt: new Date().toISOString()
+                };
+                
+                appState.people.push(person);
+                saveState();
+                updateAllViews();
+                showNotification('Person Added', `${name} has been added to the group.`, 'success');
+                return person;
+            }
+            
+            // Delete person
+            function deletePerson(personId) {
+                if (!confirm('Are you sure you want to delete this person? This will also remove their expenses.')) {
+                    return;
+                }
+                
+                const index = appState.people.findIndex(p => p.id === personId);
+                if (index !== -1) {
+                    const personName = appState.people[index].name;
+                    // Remove associated expenses
+                    appState.expenses = appState.expenses.filter(expense => 
+                        expense.payerId !== personId && !expense.participants.includes(personId)
+                    );
+                    
+                    appState.people.splice(index, 1);
+                    saveState();
+                    updateAllViews();
+                    showNotification('Person Removed', `${personName} has been removed from the group.`, 'info');
+                }
+            }
+            
+            // Add expense
+            function addExpense(description, amount, payerId, participants, splitType = 'equal') {
+                const expense = {
+                    id: generateId(),
+                    description: description.trim(),
+                    amount: parseFloat(amount),
+                    payerId,
+                    participants,
+                    splitType,
+                    date: new Date().toISOString(),
+                    settled: false
+                };
+                
+                appState.expenses.push(expense);
+                saveState();
+                updateAllViews();
+                showNotification('Expense Added', `${description} - $${parseFloat(amount).toFixed(2)} has been added.`, 'success');
+                return expense;
+            }
+            
+            // Export data
+            function exportData() {
+                const data = {
+                    people: appState.people,
+                    expenses: appState.expenses,
+                    settlements: appState.settlements,
+                    sessionDate: appState.sessionDate,
+                    exportDate: new Date().toISOString(),
+                    version: '1.0'
+                };
+                return JSON.stringify(data, null, 2);
+            }
+            
+            // Import data
+            function importData(jsonString) {
+                try {
+                    const data = JSON.parse(jsonString);
+                    
+                    if (data.people && data.expenses) {
+                        appState.people = data.people;
+                        appState.expenses = data.expenses;
+                        appState.settlements = data.settlements || [];
+                        appState.sessionDate = data.sessionDate || new Date().toISOString();
+                        
+                        saveState();
+                        updateAllViews();
+                        return true;
+                    }
+                    return false;
+                } catch (e) {
+                    console.error('Failed to import data:', e);
+                    return false;
+                }
+            }
+            
+            // Clear all data
+            function clearAllData() {
+                if (!confirm('Are you sure you want to reset all data? This cannot be undone.')) {
+                    return;
+                }
+                
+                appState.people = [];
+                appState.expenses = [];
+                appState.settlements = [];
+                appState.sessionDate = new Date().toISOString();
+                saveState();
+                updateAllViews();
+                showNotification('Data Reset', 'All data has been cleared.', 'info');
+            }
+            
+            // Show notification
+            function showNotification(title, message, type = 'info', duration = 3000) {
+                const toast = document.getElementById('notificationToast');
+                const titleEl = document.getElementById('toastTitle');
+                const messageEl = document.getElementById('toastMessage');
+                
+                if (!toast || !titleEl || !messageEl) return;
+                
+                // Set colors based on type
+                let borderColor = 'var(--color-primary)';
+                if (type === 'success') borderColor = 'var(--color-secondary)';
+                if (type === 'error') borderColor = 'var(--color-accent)';
+                if (type === 'warning') borderColor = 'var(--color-warning)';
+                
+                toast.style.borderLeftColor = borderColor;
+                titleEl.textContent = title;
+                messageEl.textContent = message;
+                
+                // Show toast
+                toast.style.display = 'block';
+                
+                // Auto hide after duration
+                setTimeout(() => {
+                    toast.style.display = 'none';
+                }, duration);
+            }
+            
+            // Show modal
+            function showModal(modalId) {
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    modal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                }
+            }
+            
+            // Hide modal
+            function hideModal(modalId) {
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            }
+            
+            // Escape HTML
+            function escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+            
+            // Initialize event listeners
+            function initEventListeners() {
+                console.log('Initializing event listeners...');
+                
+                // Header buttons
+                document.getElementById('customizeBtn').addEventListener('click', () => {
+                    showModal('customizeModal');
+                    loadCustomizationSettings();
+                });
+                
+                document.getElementById('themeBtn').addEventListener('click', () => {
+                    showModal('themeModal');
+                    renderThemes();
+                });
+                
+                document.getElementById('guideBtn').addEventListener('click', () => {
+                    showModal('guideModal');
+                });
+                
+                // People section
+                document.getElementById('addPersonBtn').addEventListener('click', () => {
+                    showModal('addPersonModal');
+                    renderColorSelector();
+                });
+                
+                document.getElementById('savePersonBtn').addEventListener('click', () => {
+                    const name = document.getElementById('personNameInput').value.trim();
+                    const balance = document.getElementById('personBalanceInput').value;
+                    const selectedColor = document.querySelector('.theme-option.active[data-color]')?.getAttribute('data-color');
+                    
+                    if (!name) {
+                        showNotification('Name Required', 'Please enter a name for the person.', 'warning');
+                        return;
+                    }
+                    
+                    addPerson(name, balance, selectedColor);
+                    hideModal('addPersonModal');
+                    
+                    // Clear inputs
+                    document.getElementById('personNameInput').value = '';
+                    document.getElementById('personBalanceInput').value = '';
+                });
+                
+                document.getElementById('cancelPersonBtn').addEventListener('click', () => hideModal('addPersonModal'));
+                document.getElementById('closePersonModal').addEventListener('click', () => hideModal('addPersonModal'));
+                
+                // Expense section
+                document.getElementById('addExpenseBtn').addEventListener('click', () => {
+                    if (appState.people.length === 0) {
+                        showNotification('Add People First', 'You need to add people before creating expenses.', 'warning');
+                        return;
+                    }
+                    showModal('addExpenseModal');
+                    loadPeopleForExpense();
+                });
+                
+                document.getElementById('saveExpenseBtn').addEventListener('click', () => {
+                    const description = document.getElementById('expenseDescInput').value.trim();
+                    const amount = document.getElementById('expenseAmountInput').value;
+                    const payerId = document.getElementById('expensePayerSelect').value;
+                    
+                    if (!description) {
+                        showNotification('Description Required', 'Please enter a description for the expense.', 'warning');
+                        return;
+                    }
+                    
+                    if (!amount || parseFloat(amount) <= 0) {
+                        showNotification('Amount Required', 'Please enter a valid amount greater than 0.', 'warning');
+                        return;
+                    }
+                    
+                    // Get selected participants
+                    const selectedParticipants = Array.from(
+                        document.querySelectorAll('.participant-checkbox:checked')
+                    ).map(cb => cb.value);
+                    
+                    if (selectedParticipants.length === 0) {
+                        showNotification('Participants Required', 'Please select at least one participant.', 'warning');
+                        return;
+                    }
+                    
+                    // Get split type
+                    const splitType = document.querySelector('.tab.active[data-split]')?.getAttribute('data-split') || 'equal';
+                    
+                    addExpense(description, amount, payerId, selectedParticipants, splitType);
+                    hideModal('addExpenseModal');
+                    
+                    // Clear inputs
+                    document.getElementById('expenseDescInput').value = '';
+                    document.getElementById('expenseAmountInput').value = '';
+                });
+                
+                document.getElementById('cancelExpenseBtn').addEventListener('click', () => hideModal('addExpenseModal'));
+                document.getElementById('closeExpenseModal').addEventListener('click', () => hideModal('addExpenseModal'));
+                
+                // Balance section
+                document.getElementById('recalculateBtn').addEventListener('click', () => {
+                    updateAllViews();
+                    showNotification('Recalculated', 'All balances have been recalculated.', 'success');
+                });
+                
+                // Settlement section
+                document.getElementById('generatePlanBtn').addEventListener('click', () => {
+                    if (appState.people.length < 2) {
+                        showNotification('More People Needed', 'You need at least 2 people to generate a settlement plan.', 'warning');
+                        return;
+                    }
+                    
+                    const settlements = generateSettlementPlan();
+                    updateAllViews();
+                    
+                    if (settlements.length === 0) {
+                        showNotification('All Settled', 'There are no outstanding balances to settle.', 'info');
+                    } else {
+                        showNotification('Plan Generated', `Created ${settlements.length} settlement transactions.`, 'success');
+                    }
+                });
+                
+                // Summary section
+                document.getElementById('copySummaryBtn').addEventListener('click', () => {
+                    const summaryText = document.getElementById('summaryContainer').textContent;
+                    
+                    navigator.clipboard.writeText(summaryText).then(() => {
+                        showNotification('Copied', 'Summary copied to clipboard.', 'success');
+                    }).catch(err => {
+                        console.error('Failed to copy:', err);
+                        showNotification('Error', 'Failed to copy to clipboard.', 'error');
+                    });
+                });
+                
+                document.getElementById('exportSummaryBtn').addEventListener('click', () => {
+                    const summaryText = document.getElementById('summaryContainer').textContent;
+                    const date = new Date().toISOString().split('T')[0];
+                    const filename = `equilibra-summary-${date}.txt`;
+                    
+                    const blob = new Blob([summaryText], { type: 'text/plain' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    
+                    showNotification('Exported', `Summary saved as ${filename}`, 'success');
+                });
+                
+                // Footer buttons
+                document.getElementById('importBtn').addEventListener('click', showImportExportModal);
+                document.getElementById('exportBtn').addEventListener('click', showImportExportModal);
+                document.getElementById('resetBtn').addEventListener('click', clearAllData);
+                
+                // Theme modal
+                document.getElementById('closeThemeModal').addEventListener('click', () => hideModal('themeModal'));
+                
+                // Customization modal
+                document.getElementById('closeCustomizeModal').addEventListener('click', () => hideModal('customizeModal'));
+                document.getElementById('saveSettingsBtn').addEventListener('click', saveCustomizationSettings);
+                document.getElementById('resetDefaultsBtn').addEventListener('click', resetCustomizationSettings);
+                
+                // Guide modal
+                document.getElementById('closeGuideModal').addEventListener('click', () => hideModal('guideModal'));
+                
+                // Import/Export modal
+                document.getElementById('closeImportExportModal').addEventListener('click', () => hideModal('importExportModal'));
+                document.getElementById('cancelImportExportBtn').addEventListener('click', () => hideModal('importExportModal'));
+                document.getElementById('processImportBtn').addEventListener('click', processImport);
+                document.getElementById('copyJsonBtn').addEventListener('click', copyJsonToClipboard);
+                document.getElementById('downloadJsonBtn').addEventListener('click', downloadJsonFile);
+                
+                // Notification toast
+                document.getElementById('closeToast').addEventListener('click', () => {
+                    document.getElementById('notificationToast').style.display = 'none';
+                });
+                
+                // Tab switching
+                document.querySelectorAll('.tab[data-tab]').forEach(tab => {
+                    tab.addEventListener('click', function() {
+                        const tabId = this.getAttribute('data-tab');
+                        // Update active tab
+                        document.querySelectorAll('.tab[data-tab]').forEach(t => t.classList.remove('active'));
+                        this.classList.add('active');
+                        // In a real app, you would filter expenses here
+                        renderExpenses();
+                    });
+                });
+                
+                // Close modals when clicking overlay
+                document.querySelectorAll('.modal-overlay').forEach(overlay => {
+                    overlay.addEventListener('click', function(e) {
+                        if (e.target === this) {
+                            this.classList.remove('active');
+                            document.body.style.overflow = '';
+                        }
+                    });
+                });
+                
+                // Tab switching in expense modal
+                document.querySelectorAll('.tab[data-split]').forEach(tab => {
+                    tab.addEventListener('click', function() {
+                        // Update active tab
+                        document.querySelectorAll('.tab[data-split]').forEach(t => t.classList.remove('active'));
+                        this.classList.add('active');
+                        setupSplitControls();
+                    });
+                });
+                
+                // Tab switching in import/export modal
+                document.querySelectorAll('.tab[data-io]').forEach(tab => {
+                    tab.addEventListener('click', function() {
+                        const ioType = this.getAttribute('data-io');
+                        
+                        // Update active tab
+                        document.querySelectorAll('.tab[data-io]').forEach(t => t.classList.remove('active'));
+                        this.classList.add('active');
+                        
+                        // Show/hide content
+                        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                        document.getElementById(ioType + 'Tab').classList.add('active');
+                        
+                        // Show/hide import button
+                        document.getElementById('processImportBtn').style.display = 
+                            ioType === 'import' ? 'block' : 'none';
+                            
+                        // Populate export data if on export tab
+                        if (ioType === 'export') {
+                            document.getElementById('exportData').value = exportData();
+                        }
+                    });
+                });
+                
+                // File import
+                document.getElementById('importFile').addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(event) {
+                            document.getElementById('importData').value = event.target.result;
+                        };
+                        reader.readAsText(file);
+                    }
+                });
+                
+                // Slider updates
+                document.getElementById('uiDensitySlider').addEventListener('input', function() {
+                    const value = parseInt(this.value);
+                    const labels = ['Compact', 'Medium', 'Comfortable'];
+                    document.getElementById('uiDensityValue').textContent = labels[value - 1] || 'Medium';
+                });
+                
+                document.getElementById('notificationDurationSlider').addEventListener('input', function() {
+                    document.getElementById('notificationDurationValue').textContent = this.value + 's';
+                });
+                
+                // Theme selection
+                document.addEventListener('click', function(e) {
+                    if (e.target.closest('.theme-option[data-theme]')) {
+                        const themeOption = e.target.closest('.theme-option[data-theme]');
+                        const themeId = themeOption.getAttribute('data-theme');
+                        
+                        // Update theme
+                        appState.settings.theme = themeId;
+                        document.body.className = themeId;
+                        saveState();
+                        
+                        // Update active state
+                        document.querySelectorAll('.theme-option[data-theme]').forEach(opt => {
+                            opt.classList.remove('active');
+                        });
+                        themeOption.classList.add('active');
+                        
+                        showNotification('Theme Changed', 'App theme has been updated.', 'success');
+                    }
+                    
+                    // Color selection for person
+                    if (e.target.closest('.theme-option[data-color]')) {
+                        const colorOption = e.target.closest('.theme-option[data-color]');
+                        
+                        // Update active state
+                        document.querySelectorAll('.theme-option[data-color]').forEach(opt => {
+                            opt.classList.remove('active');
+                        });
+                        colorOption.classList.add('active');
+                    }
+                });
+                
+                // Keyboard shortcuts
+                document.addEventListener('keydown', function(e) {
+                    // Escape to close modals
+                    if (e.key === 'Escape') {
+                        const activeModal = document.querySelector('.modal-overlay.active');
+                        if (activeModal) {
+                            activeModal.classList.remove('active');
+                            document.body.style.overflow = '';
+                        }
+                    }
+                    
+                    // Ctrl/Cmd + N to add new expense
+                    if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+                        e.preventDefault();
+                        document.getElementById('addExpenseBtn').click();
+                    }
+                    
+                    // Ctrl/Cmd + P to add new person
+                    if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+                        e.preventDefault();
+                        document.getElementById('addPersonBtn').click();
+                    }
+                });
+                
+                console.log('Event listeners initialized successfully!');
+            }
+            
+            // Render color selector
+            function renderColorSelector() {
+                const container = document.getElementById('colorSelector');
+                if (!container) return;
+                
+                container.innerHTML = colorPalette.map((color, index) => `
+                    <div class="theme-option ${index === 0 ? 'active' : ''}" 
+                         style="width: 40px; height: 40px;" 
+                         data-color="${color}" 
+                         title="Color ${index + 1}">
+                        <div class="theme-preview">
+                            <div style="background-color: ${color};"></div>
+                            <div style="background-color: ${color};"></div>
+                            <div style="background-color: ${color};"></div>
+                            <div style="background-color: ${color};"></div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            // Render themes
+            function renderThemes() {
+                const container = document.getElementById('themeGrid');
+                if (!container) return;
+                
+                container.innerHTML = themes.map(theme => `
+                    <div class="theme-option ${theme.id === appState.settings.theme ? 'active' : ''}" 
+                         data-theme="${theme.id}" title="${theme.name}">
+                        <div class="theme-preview">
+                            <div class="theme-primary" style="background-color: ${theme.colors[0]}"></div>
+                            <div class="theme-secondary" style="background-color: ${theme.colors[1]}"></div>
+                            <div class="theme-accent" style="background-color: ${theme.colors[2]}"></div>
+                            <div class="theme-surface" style="background-color: ${theme.colors[3]}"></div>
+                        </div>
+                        <div class="theme-name">${theme.name}</div>
+                    </div>
+                `).join('');
+            }
+            
+            // Load people for expense modal
+            function loadPeopleForExpense() {
+                const payerSelect = document.getElementById('expensePayerSelect');
+                const participantsContainer = document.getElementById('splitParticipants');
+                
+                if (!payerSelect || !participantsContainer) return;
+                
+                // Populate payer select
+                payerSelect.innerHTML = appState.people.map(person => 
+                    `<option value="${person.id}">${person.name}</option>`
+                ).join('');
+                
+                // Populate participants
+                participantsContainer.innerHTML = appState.people.map(person => `
+                    <div class="flex items-center justify-between mb-2">
+                        <label class="flex items-center gap-2">
+                            <input type="checkbox" class="participant-checkbox" value="${person.id}" checked>
+                            <div class="person-avatar" style="width: 24px; height: 24px; background-color: ${person.color}; font-size: 0.75rem">
+                                ${person.avatarInitial}
+                            </div>
+                            <span>${person.name}</span>
+                        </label>
+                    </div>
+                `).join('');
+                
+                setupSplitControls();
+            }
+            
+            // Set up split controls
+            function setupSplitControls() {
+                const controlsContainer = document.getElementById('splitControls');
+                if (!controlsContainer) return;
+                
+                const splitType = document.querySelector('.tab.active[data-split]')?.getAttribute('data-split') || 'equal';
+                
+                if (splitType === 'equal') {
+                    controlsContainer.innerHTML = `
+                        <div class="text-muted text-sm">
+                            The total amount will be divided equally among all selected participants.
+                        </div>
+                    `;
+                } else if (splitType === 'percentage') {
+                    controlsContainer.innerHTML = `
+                        <div class="text-muted text-sm mb-2">
+                            Enter percentage for each participant (must total 100%).
+                        </div>
+                        ${appState.people.map(person => `
+                            <div class="flex items-center justify-between mb-2">
+                                <span>${person.name}</span>
+                                <input type="number" class="form-input percentage-input" 
+                                       data-person="${person.id}" 
+                                       style="width: 100px;" 
+                                       min="0" max="100" step="1" 
+                                       placeholder="%">
+                            </div>
+                        `).join('')}
+                    `;
+                } else if (splitType === 'custom') {
+                    controlsContainer.innerHTML = `
+                        <div class="text-muted text-sm mb-2">
+                            Enter custom amount for each participant.
+                        </div>
+                        ${appState.people.map(person => `
+                            <div class="flex items-center justify-between mb-2">
+                                <span>${person.name}</span>
+                                <input type="number" class="form-input custom-input" 
+                                       data-person="${person.id}" 
+                                       style="width: 120px;" 
+                                       min="0" step="0.01" 
+                                       placeholder="$0.00">
+                            </div>
+                        `).join('')}
+                    `;
+                }
+            }
+            
+            // Load customization settings
+            function loadCustomizationSettings() {
+                const settings = appState.settings;
+                
+                // Set toggle values
+                document.getElementById('compactModeToggle').checked = settings.compactMode;
+                document.getElementById('reduceAnimationsToggle').checked = settings.reduceAnimations;
+                document.getElementById('autoRecalcToggle').checked = settings.autoRecalc;
+                document.getElementById('roundDollarsToggle').checked = settings.roundDollars;
+                document.getElementById('includeSettledToggle').checked = settings.includeSettled;
+                document.getElementById('desktopNotificationsToggle').checked = settings.desktopNotifications;
+                
+                // Set slider values
+                document.getElementById('uiDensitySlider').value = settings.uiDensity;
+                document.getElementById('uiDensityValue').textContent = 
+                    settings.uiDensity === 1 ? 'Compact' : settings.uiDensity === 2 ? 'Medium' : 'Comfortable';
+                
+                document.getElementById('notificationDurationSlider').value = settings.notificationDuration;
+                document.getElementById('notificationDurationValue').textContent = settings.notificationDuration + 's';
+            }
+            
+            // Save customization settings
+            function saveCustomizationSettings() {
+                const newSettings = {
+                    compactMode: document.getElementById('compactModeToggle').checked,
+                    reduceAnimations: document.getElementById('reduceAnimationsToggle').checked,
+                    uiDensity: parseInt(document.getElementById('uiDensitySlider').value),
+                    autoRecalc: document.getElementById('autoRecalcToggle').checked,
+                    roundDollars: document.getElementById('roundDollarsToggle').checked,
+                    includeSettled: document.getElementById('includeSettledToggle').checked,
+                    desktopNotifications: document.getElementById('desktopNotificationsToggle').checked,
+                    notificationDuration: parseInt(document.getElementById('notificationDurationSlider').value)
+                };
+                
+                appState.settings = { ...appState.settings, ...newSettings };
+                saveState();
+                hideModal('customizeModal');
+                showNotification('Settings Saved', 'Your preferences have been updated.', 'success');
+            }
+            
+            // Reset customization settings
+            function resetCustomizationSettings() {
+                if (!confirm('Reset all settings to defaults?')) return;
+                
+                appState.settings = {
+                    theme: appState.settings.theme, // Keep current theme
+                    compactMode: false,
+                    reduceAnimations: false,
+                    uiDensity: 2,
+                    autoRecalc: true,
+                    roundDollars: false,
+                    includeSettled: false,
+                    desktopNotifications: false,
+                    notificationDuration: 3
+                };
+                
+                saveState();
+                loadCustomizationSettings();
+                showNotification('Defaults Restored', 'All settings have been reset to defaults.', 'info');
+            }
+            
+            // Show import/export modal
+            function showImportExportModal() {
+                // Set to export tab by default
+                document.querySelectorAll('.tab[data-io]').forEach(tab => tab.classList.remove('active'));
+                document.querySelector('.tab[data-io="export"]').classList.add('active');
+                
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                document.getElementById('exportTab').classList.add('active');
+                
+                // Populate export data
+                document.getElementById('exportData').value = exportData();
+                
+                // Show import button only on import tab
+                document.getElementById('processImportBtn').style.display = 'none';
+                
+                showModal('importExportModal');
+            }
+            
+            // Process import
+            function processImport() {
+                const importData = document.getElementById('importData').value;
+                
+                if (!importData.trim()) {
+                    showNotification('No Data', 'Please paste JSON data or upload a file.', 'warning');
+                    return;
+                }
+                
+                const success = importData(importData);
+                
+                if (success) {
+                    hideModal('importExportModal');
+                    showNotification('Data Imported', 'Your data has been successfully imported.', 'success');
+                } else {
+                    showNotification('Import Failed', 'The data appears to be invalid or corrupted.', 'error');
+                }
+            }
+            
+            // Copy JSON to clipboard
+            function copyJsonToClipboard() {
+                const jsonText = document.getElementById('exportData').value;
+                
+                navigator.clipboard.writeText(jsonText).then(() => {
+                    showNotification('Copied', 'JSON data copied to clipboard.', 'success');
+                }).catch(err => {
+                    console.error('Failed to copy:', err);
+                    showNotification('Error', 'Failed to copy JSON data.', 'error');
+                });
+            }
+            
+            // Download JSON file
+            function downloadJsonFile() {
+                const jsonText = document.getElementById('exportData').value;
+                const date = new Date().toISOString().split('T')[0];
+                const filename = `equilibra-backup-${date}.json`;
+                
+                const blob = new Blob([jsonText], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                showNotification('Backup Saved', `Data saved as ${filename}`, 'success');
+            }
+            
+            // Add sample data for testing
+            function addSampleData() {
+                if (appState.people.length > 0 || appState.expenses.length > 0) return;
+                
+                // Add sample people
+                const john = addPerson('John Doe', 0, '#4285F4');
+                const sarah = addPerson('Sarah Smith', 0, '#EA4335');
+                const mike = addPerson('Mike Johnson', 0, '#34A853');
+                
+                // Add sample expenses
+                addExpense('Dinner at Restaurant', 120, john.id, [john.id, sarah.id, mike.id], 'equal');
+                addExpense('Movie Tickets', 45, sarah.id, [john.id, sarah.id, mike.id], 'equal');
+                addExpense('Gas for Trip', 60, mike.id, [mike.id, john.id], 'equal');
+                
+                // Generate settlement plan
+                generateSettlementPlan();
+                
+                showNotification('Sample Data Loaded', 'Sample data has been added. Try the features!', 'info');
+            }
+            
+            // Initialize the app
+            function init() {
+                console.log('Initializing Equilibra app...');
+                loadState();
+                initEventListeners();
+                updateAllViews();
+                
+                // Add sample data if first time
+                if (appState.people.length === 0 && appState.expenses.length === 0) {
+                    setTimeout(() => {
+                        if (confirm('Welcome to Equilibra! Would you like to load sample data to try the features?')) {
+                            addSampleData();
+                        } else {
+                            showNotification('Welcome to Equilibra!', 'Start by adding people and expenses.', 'info', 5000);
+                        }
+                    }, 500);
+                }
+                
+                console.log('Equilibra app initialized successfully!');
+            }
+            
+            // Start the app
+            init();
+        });
+    </script>
+</body>
+</html>
